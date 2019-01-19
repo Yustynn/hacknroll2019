@@ -7,6 +7,7 @@ def print_events(device):
         for event in events:
             print(device.path, evdev.categorize(event), event, sep=': ')
 
+print(evdev.list_devices())
 devices = [evdev.InputDevice(path) for path in evdev.list_devices()]
 
 for device in devices:

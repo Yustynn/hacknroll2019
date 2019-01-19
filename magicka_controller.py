@@ -26,7 +26,6 @@ class MagickaController:
             self.Controller.btnout(element)
             sleep(0.1)
 
-
     def fire(self, direction, duration):
         print("Gandalf Charging....")
         self.firing = True
@@ -58,6 +57,12 @@ class MagickaController:
     def move(self, direction):
         self.Controller.joystick(direction, "left")
 
+    def dragonstrike(self):
+        sequence = ["A", "A", "B", "A", "A"]
+        self.elementSequence(sequence)
+        self.Controller.triggerin("right")
+        time.sleep(0.1)
+        self.Controller.triggerout("right")
 
 if __name__=="__main__":
     magickaController = MagickaController("Gandalf")

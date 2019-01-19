@@ -1,7 +1,6 @@
 from evdev import InputEvent, InputDevice, UInput, ecodes as e
 from time import sleep
 
-
 class Controller:
     def __init__(self, name):
         self.name = name
@@ -11,7 +10,7 @@ class Controller:
             'X': e.BTN_NORTH,
             'B': e.BTN_EAST,
         }
-        EVENT_ID = 18
+        EVENT_ID = 10
         real_controller = InputDevice(f'/dev/input/event{EVENT_ID}')
         self.interface = UInput.from_device(
             real_controller,
@@ -67,25 +66,15 @@ class Controller:
         """
         Send signal to controller based on X and Y displacement from center
         Args:
-            direction: "up", "down", "left", "right", "upleft", "upright", "downleft", "downright"
+            direction: Tuple of (x, y), from -1 to +1
             side: "left" or "right", indicating joystick
         Returns:
             null
         """
         # Code 0 is for X, Code 1 is for Y
         # Write(event type, code, value)
-        x = 0
-        y = 0
-        if "down" in direction:
-            y = -32767
-        if "up" in direction:
-            y = 32767
-        if "left" in direction:
-            x = -32767
-        if "right" in direction:
-            x = 32767
-        if "stop" in direction:
-            x, y = (0, 0)
+        x = int(direction[0]*32767)
+        y = int(direction[1]*32767)
         if side=="left":
             self.interface.write(3,0,x)
             self.interface.write(3,1,y)
@@ -113,31 +102,31 @@ class Controller:
         sleep(1.0)
         self.btnout("B")
         print("Left Joy Left 1.0s")
-        self.joystick(-1,0,"left")
+        self.joystick((-1,0),"left")
         sleep(1.0)
         print("Left Joy Right 1.0s")
-        self.joystick(1,0,"left")
+        self.joystick((1,0),"left")
         sleep(1.0)
         print("Left Joy Up 1.0s")
-        self.joystick(0,1,"left")
+        self.joystick((0,1),"left")
         sleep(1.0)
         print("Left Joy Down 1.0s")
-        self.joystick(0,-1,"left")
+        self.joystick((0,-1),"left")
         sleep(1.0)
-        self.joystick(0,0,"left")
+        self.joystick((0,0),"left")
         print("Right Joy Left 1.0s")
-        self.joystick(-1,0,"right")
+        self.joystick((-1,0),"right")
         sleep(1.0)
         print("Right Joy Right 1.0s")
-        self.joystick(1,0,"right")
+        self.joystick((1,0),"right")
         sleep(1.0)
         print("Right Joy Up 1.0s")
-        self.joystick(0,1,"right")
+        self.joystick((0,1),"right")
         sleep(1.0)
         print("Right Joy Down 1.0s")
-        self.joystick(0,-1,"right")
+        self.joystick((0,-1),"right")
         sleep(1.0)
-        self.joystick(0,0,"right")
+        self.joystick((0,0),"right")
         print("Left Tab In 1.0s")
         self.tabin("left")
         sleep(1.0)
@@ -155,7 +144,6 @@ class Controller:
         sleep(1.0)
         self.triggerout('right')
         self.interface.close()
-
 
 if __name__=="__main__":
     controller_one = Controller("One")
